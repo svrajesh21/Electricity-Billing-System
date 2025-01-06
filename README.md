@@ -12,7 +12,6 @@ This project is a command-line-based Electricity Billing System built using Pyth
 - ₹5 per unit for up to 100 units.
 - ₹7 per unit for 101–300 units.
 - ₹10 per unit for consumption exceeding 300 units.
-- Customer Input: Users can enter their name and the number of units consumed.
 - Bill Generation: Displays a summary of the bill, including customer name, units consumed, rate per unit, and total amount due.
 
 ## Requirements
