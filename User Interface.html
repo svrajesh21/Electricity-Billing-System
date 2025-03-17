@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Billing System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 700px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4169e1, #304ffe);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 0.5px;
+        }
+        
+        .header .logo {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #4169e1;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #4169e1, #304ffe);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(65, 105, 225, 0.2);
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #304ffe, #1a237e);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(65, 105, 225, 0.3);
+        }
+        
+        .result {
+            display: none;
+            margin-top: 40px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eaeef3;
+        }
+        
+        .bill-container {
+            background-color: white;
+        }
+        
+        .bill-header {
+            background: linear-gradient(135deg, #4169e1, #304ffe);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .bill-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .bill-title {
+            font-size: 18px;
+            margin: 0;
+        }
+        
+        .bill-info {
+            padding: 25px;
+            border-bottom: 1px solid #eaeef3;
+        }
+        
+        .bill-customer {
+            margin-bottom: 20px;
+        }
+        
+        .bill-label {
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .bill-value {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .bill-id {
+            background-color: #f8fafc;
+            padding: 15px 25px;
+            border-bottom: 1px solid #eaeef3;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .bill-details {
+            padding: 25px;
+        }
+        
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eaeef3;
+        }
+        
+        .bill-row:last-child {
+            border-bottom: none;
+            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 2px solid #eaeef3;
+        }
+        
+        .bill-row-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .bill-row-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .bill-total {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .bill-footer {
+            background-color: #f8fafc;
+            padding: 20px 25px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #eaeef3;
+        }
+        
+        .error {
+            color: #e53935;
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .rate-info {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 15px;
+            border: 1px solid #eaeef3;
+        }
+        
+        .rate-info h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .rate-info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            color: #555;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+            }
+            
+            .header .logo {
+                position: static;
+                transform: none;
+                margin-bottom: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">⚡</div>
+            <h1>Electricity Billing System</h1>
+        </div>
+        <div class="content">
+            <div class="rate-info">
+                <h3>Rate Information</h3>
+                <ul>
+                    <li>≤ 100 units: 5 Rs per unit</li>
+                    <li>101-300 units: 7 Rs per unit</li>
+                    <li>> 300 units: 10 Rs per unit</li>
+                </ul>
+            </div>
+            
+            <div class="form-group">
+                <label for="customerName">Customer Name</label>
+                <input type="text" id="customerName" placeholder="Enter customer name">
+                <div class="error" id="nameError">Please enter a valid customer name</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="customerAddress">Door Number</label>
+                <input type="text" id="customerAddress" placeholder="Enter door number">
+                <div class="error" id="addressError">Please enter a valid door number</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="unitsConsumed">Units Consumed</label>
+                <input type="number" id="unitsConsumed" placeholder="Enter units consumed">
+                <div class="error" id="unitsError">Please enter a valid number of units</div>
+            </div>
+            
+            <button id="calculateBtn">Generate Bill</button>
+            
+            <div class="result" id="billResult">
+                <div class="bill-container">
+                    <div class="bill-header">
+                        <div class="bill-logo">⚡ PowerCorp</div>
+                        <h2 class="bill-title">Electricity Bill</h2>
+                    </div>
+                    
+                    <div class="bill-info">
+                        <div class="bill-customer">
+                            <span class="bill-label">Customer Name:</span>
+                            <span class="bill-value" id="resultName"></span>
+                        </div>
+                        <div class="bill-customer">
+                            <span class="bill-label">Door Number:</span>
+                            <span class="bill-value" id="resultAddress"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="bill-id">
+                        <div>
+                            <span class="bill-label">Bill Date:</span>
+                            <span class="bill-value" id="billDate"></span>
+                        </div>
+                        <div>
+                            <span class="bill-label">Bill Number:</span>
+                            <span class="bill-value" id="billNumber"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="bill-details">
+                        <div class="bill-row">
+                            <span class="bill-row-label">Units Consumed:</span>
+                            <span class="bill-row-value" id="resultUnits"></span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-row-label">Rate per Unit:</span>
+                            <span class="bill-row-value" id="resultRate"></span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-row-label">Energy Charges:</span>
+                            <span class="bill-row-value" id="energyCharges"></span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-row-label">Fixed Charges:</span>
+                            <span class="bill-row-value" id="fixedCharges"></span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-row-label">Tax (5%):</span>
+                            <span class="bill-row-value" id="taxAmount"></span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-row-label bill-total">Total Amount Due:</span>
+                            <span class="bill-row-value bill-total" id="resultAmount"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="bill-footer">
+                        <p>Payment due within 15 days of bill generation. Thank you for your business!</p>
+                        <p>For questions about your bill, please contact customer service at 1-800-POWER or support@powercorp.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const customerNameInput = document.getElementById('customerName');
+            const customerAddressInput = document.getElementById('customerAddress');
+            const unitsConsumedInput = document.getElementById('unitsConsumed');
+            const nameError = document.getElementById('nameError');
+            const addressError = document.getElementById('addressError');
+            const unitsError = document.getElementById('unitsError');
+            const billResult = document.getElementById('billResult');
+            
+            calculateBtn.addEventListener('click', function() {
+                // Reset error messages
+                nameError.style.display = 'none';
+                addressError.style.display = 'none';
+                unitsError.style.display = 'none';
+                
+                // Get input values
+                const customerName = customerNameInput.value.trim();
+                const customerAddress = customerAddressInput.value.trim();
+                const unitsConsumed = parseInt(unitsConsumedInput.value);
+                
+                // Validate inputs
+                let isValid = true;
+                
+                if (customerName === '') {
+                    nameError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (customerAddress === '') {
+                    addressError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (isNaN(unitsConsumed) || unitsConsumed < 0) {
+                    unitsError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Calculate bill
+                    const unitRate = getUnitRate(unitsConsumed);
+                    const energyCharge = unitsConsumed * unitRate;
+                    const fixedCharge = 100; // Fixed charge of 100 Rs
+                    const subtotal = energyCharge + fixedCharge;
+                    const tax = subtotal * 0.05; // 5% tax
+                    const totalAmount = subtotal + tax;
+                    
+                    // Generate bill date and number
+                    const today = new Date();
+                    const billDate = today.toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                    const billNumber = 'BILL-' + Math.floor(10000 + Math.random() * 90000);
+                    
+                    // Display result
+                    document.getElementById('resultName').textContent = customerName;
+                    document.getElementById('resultAddress').textContent = customerAddress;
+                    document.getElementById('billDate').textContent = billDate;
+                    document.getElementById('billNumber').textContent = billNumber;
+                    document.getElementById('resultUnits').textContent = unitsConsumed + ' units';
+                    document.getElementById('resultRate').textContent = unitRate + ' Rs';
+                    document.getElementById('energyCharges').textContent = energyCharge.toFixed(2) + ' Rs';
+                    document.getElementById('fixedCharges').textContent = fixedCharge.toFixed(2) + ' Rs';
+                    document.getElementById('taxAmount').textContent = tax.toFixed(2) + ' Rs';
+                    document.getElementById('resultAmount').textContent = totalAmount.toFixed(2) + ' Rs';
+                    
+                    billResult.style.display = 'block';
+                }
+            });
+            
+            // Function to get unit rate based on consumption
+            function getUnitRate(units) {
+                if (units <= 100) {
+                    return 5;
+                } else if (units <= 300) {
+                    return 7;
+                } else {
+                    return 10;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
